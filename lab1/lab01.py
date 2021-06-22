@@ -109,7 +109,7 @@ if __name__ == "__main__":
 
     # Display the public IP of the EC2 instance before it finishes. (no wait time)
     print('Waiting for instance to be launched...')
-    time.sleep(0)
+    time.sleep(30)
     ip_address = client.describe_instances(
         InstanceIds = [ instance_id ]
     )['Reservations'][0]['Instances'][0]['PublicIpAddress']
