@@ -103,7 +103,10 @@ sudo yum install -y httpd mariadb-server
 sudo systemctl start httpd
 sudo systemctl enable httpd
 sudo systemctl start mariadb
-sudo systemctl enable mariadb'''
+sudo systemctl enable mariadb
+wget https://wordpress.org/latest.tar.gz
+tar -xzf latest.tar.gz
+cp wordpress/wp-config-sample.php wordpress/wp-config.php'''
     instance_id = client.run_instances(
         ImageId = 'ami-0b2ca94b5b49e0132',
         MinCount = 1, 

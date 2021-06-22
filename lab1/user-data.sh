@@ -6,3 +6,6 @@ sudo systemctl start httpd
 sudo systemctl enable httpd
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
+wget https://wordpress.org/latest.tar.gz
+tar -xzf latest.tar.gz
+cp wordpress/wp-config-sample.php wordpress/wp-config.php
