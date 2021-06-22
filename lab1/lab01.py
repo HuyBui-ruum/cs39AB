@@ -96,6 +96,14 @@ if __name__ == "__main__":
     )   
 
     # Step 5: Launch ec2 instance 
+    user_data = '''#!/bin/bash
+sudo yum update -y
+sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2
+sudo yum install -y httpd mariadb-server
+sudo systemctl start httpd
+sudo systemctl enable httpd
+sudo systemctl start mariadb
+sudo systemctl enable mariadb'''
     instance_id = client.run_instances(
         ImageId = 'ami-0b2ca94b5b49e0132',
         MinCount = 1, 
@@ -103,7 +111,8 @@ if __name__ == "__main__":
         InstanceType = 't2.micro',
         SecurityGroupIds = [ sg_id ],
         SubnetId = public_subnet_id, 
-        KeyName = 'cs39ab'
+        KeyName = 'cs39ab',
+        UserData = user_data
     )['Instances'][0]['InstanceId']
     print('Instance id is ' + instance_id)
 
