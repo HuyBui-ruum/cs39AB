@@ -1,5 +1,5 @@
 # Lab_01 # cs39AB-002
-# Huy Bui and 
+# Huy Bui and Johnson Malcolm
 
 import boto3
 import time
