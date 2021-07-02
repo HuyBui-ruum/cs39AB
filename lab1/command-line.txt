@@ -1,0 +1,45 @@
+#work but not wp-config.php
+
+Amazon Linux 2
+
+ssh -i cs39ab.pem ec2-user@18.144.48.127
+cat /etc/system-release                       **** to check which amazon linux
+sudo usermod -a -G apache ec2-user
+exit
+groups
+sudo chown -R ec2-user:apache /var/www
+sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;
+find /var/www -type f -exec sudo chmod 0664 {} \;
+echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
+http://18.144.48.127/phpinfo.php
+rm /var/www/html/phpinfo.php
+sudo systemctl start mariadb
+sudo mysql_secure_installation
+pass: 123456789
+wget https://wordpress.org/latest.tar.gz
+tar -xzf latest.tar.gz
+sudo systemctl start mariadb
+mysql -u root -p
+CREATE USER 'cs39ab'@'localhost' IDENTIFIED BY '123456789';
+CREATE DATABASE `wordpress-db`;
+GRANT ALL PRIVILEGES ON `wordpress-db`.* TO "cs39ab"@"localhost";
+FLUSH PRIVILEGES;
+exit
+cp wordpress/wp-config-sample.php wordpress/wp-config.php
+nano wordpress/wp-config.php
+cp -r wordpress/* /var/www/html/
+sudo vim /etc/httpd/conf/httpd.conf
+sudo yum install php-gd
+sudo yum list installed | grep php-gd
+sudo chown -R apache /var/www
+sudo chgrp -R apache /var/www
+sudo chmod 2775 /var/www
+find /var/www -type d -exec sudo chmod 2775 {} \;
+find /var/www -type f -exec sudo chmod 0664 {} \;
+sudo systemctl restart httpd
+sudo systemctl enable httpd && sudo systemctl enable mariadb
+sudo systemctl status mariadb
+sudo systemctl status httpd
+http://18.144.48.127/wp-admin/install.php
+pass: n4FiV4)AinX)Z$Zk3W
+http://18.144.48.127/wp-config.php
