@@ -3,9 +3,9 @@
 
 import boto3
 import time
-
+#IP: 18.144.60.154
 # us-west-1(N.California)
-
+# test
 
 if __name__ == "__main__":
     # Step 1: obtain the id of the default VPC
