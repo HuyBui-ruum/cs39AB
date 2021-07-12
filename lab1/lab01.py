@@ -1,11 +1,11 @@
 # Lab_01 # cs39AB-002
 # Huy Bui and Johnson Malcolm
-
+#IP: 13.57.198.251
 import boto3
 import time
 
 # us-west-1(N.California)
-
+# subnet 1c
 
 if __name__ == "__main__":
     # Step 1: obtain the id of the default VPC
