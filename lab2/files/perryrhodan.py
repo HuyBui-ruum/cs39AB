@@ -9,8 +9,7 @@ from urllib import parse
 from urllib.parse import unquote
 import mysql.connector
 import os
-# 
-# let make a call so i can share my screen i got something done
+
 
 class MyHandler(BaseHTTPRequestHandler):
 
@@ -24,13 +23,17 @@ class MyHandler(BaseHTTPRequestHandler):
             </head>
             
             ''', "utf-8"))
-       
+               
         self.wfile.write(bytes('''
             <body>
                 <head>
                     <title>HTML Forms</title>
             </head>
-            <p>Registration</p>
+            <p>Registration<br><br></p>
+                
+
+            ''', "utf-8"))    
+        self.wfile.write(bytes('''
             <form action="/submit" method="get">
                 Email: <input type="text" name="email">
                 <br>
@@ -41,91 +44,196 @@ class MyHandler(BaseHTTPRequestHandler):
                 Last Name: <input type="text" name="last">
                 <br>
                 <br>
-                Date of Birth: <input type="text" name="birth">
+                Date of Birth (Enter all numbers without space - in yearMonthdate format - example 19931120): <input type="text" name="birth">
                 <br>
                 <br>
                 Event (1: marathon, 2:half): <input type="text" name="event">
                 <br>
                 <br>
-                Estimated Finish Time: <input type="text" name="time">
+                Estimated Finish Time (Enter value in HoursMinutesSeconds without space - For example, enter 111111 for 11 hours 11 minutes 11 seconds): <input type="text" name="time">
                 <br>
                 <br>
                 <input type="submit" value="Submit">
             </form>
+                <style>
+                        body{
+                            
+                            background: linear-gradient(to bottom right, lavender, thistle, peachpuff, lightblue);
+                        }
+                </style>
             </body>
             ''', "utf-8"))
         
-       
-        # sql = f"INSERT INTO registrations VALUES ({'email'}, {'first'}, {'last'}, {'birth'}, {'event'}, {'time'})"
-        # cursor = self.db.cursor()
+        # #test key
+        # sql = "SELECT * FROM registrations ORDER BY 'email' DESC"
+        # cursor = self.db.cursor(buffered = True)
         # cursor.execute(sql)
-        # db.commit()
-        # self.wfile.write(bytes('''
-        #     <form action="/submit">
-        #         <input type="submit" value="Submit"
-
+        # for email in cursor:
+        #     if email == email: 
+        #         self.wfile.write(bytes('''
+        #         <p> Error! Please enter another email!!! </p>
+        #         ''', "utf-8"))
+            
+            
+       
         
-        # ''', "utf-8"))
-
-        # self.wfile.write(bytes('''
-        #
-        #     <html>
-        #     <body>
-
-        #     <h1>The form element</h1>
-
-        #     <form action="/submit">
-        #         <label for="fname">First name:</label>
-        #         <input type="text" id="fname" name="fname"><br><br>
-        #         <label for="lname">Last name:</label>
-        #         <input type="text" id="lname" name="lname"><br><br>
-        #         <input type="submit" value="Submit">
-        #     </form action="/submit">
-
-        #     <p>Click the "Submit" button and the form-data will be sent to a page on the 
-        #     server called "action_page.php".</p>
-
-        #     </body>
-        #     </html>
-        #     ''', "utf-8"))
-    # handles "/submit" path requests
     
     def submit(self, query_params):
          self.wfile.write(bytes('''
             <body>
-                 
+                <p>Congratulation</p>
                 <p>You've been submitted your resgitration</p>
+                <p>Visit path /admin for Submission History</p>
+            
+                <style>
+                    body {
+                        font:italic bold 50px Serif;
+                        text-align: center;
+                        background: linear-gradient(to bottom left, aqua, mistyrose, blue, lavenderblush, snow, azure, aliceblue, ghostwhite, lightblue, mediumslateblue);
+                        color: black;
+                        }
+                </style>
             ''', "utf-8"))
-    
+
 
     # handles "/admin" path requests 
-    def admin(self): 
-        # self.send_response(200)
-        # self.send_header("Content-type", "text/html")
-        # self.end_headers()
-        message = "Test Lab2 /admin"
-        self.wfile.write(bytes(message, "utf8"))
-    #no
-    
+    def admin(self):
+        self.wfile.write(bytes('''
+        <header>
+            <h1>Submission History</h1>
+              
+        </header>
+                    ''', "utf-8"))
+        self.wfile.write(bytes('''
+            <html>
+            <head>
+                <title>Submission History</title>
+                
+                <style>
+                    body {
+                        font:18px/1.4 Verdana,Arial; 
+                        
+                        background-image: linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet);
+                        height:100%; 
+                        margin:25px 0; 
+                        padding:0;
+                        text-align: center
+                    }
+                    p {
+                        margin-top:0
+                    }
+                    table { 
+                        border: 1px solid black; 
+                        margin: 0 auto; 
+                        border-collapse: separate;
+                        box-sizing: border-box;
+                        table-layout: fixed;
+                        width: 1500px;
+                    }
+                    th, td { 
+                        border: 1px solid black;
+                        text-align: center; 
+                    }
+                    thead { 
+                         
+                        background-image: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
+                        color: #fff; 
+                    }
+                    tbody tr:nth-child(odd) {
+                        background-color: #FFE4E1;
+                    }
 
+                    tbody tr:nth-child(even) {
+                        background-color: #AFEEEE;
+                    }
+                    
+                    
+                    
+                </style>
+            </head> 
+        ''', "utf-8"))
+        self.wfile.write(bytes('''
+            <body>
+                <table class="table table-striped table-bordered table-sm">  
+                    <thead class="thead-dark">  
+                        <tr>  
+                            <th>Email</th>  
+                            <th>First Name</th>
+                            <th>Last Name</th>  
+                            <th>Date of Birth</th>
+                            <th>Event</th>
+                            <th>Estimated Finish Time<br>Hours : Minutes : Seconds</th>  
+                        </tr>  
+                    </thead>  
+                    <tbody class="tbody-light">  
+        ''', "utf-8"))
+        sql = "SELECT * FROM registrations ORDER BY 'email' DESC"
+        cursor = self.db.cursor(buffered = True)
+        cursor.execute(sql)
+        for email, first, last, birth, event, time in cursor:
+            # time1 = time.format('time', '%h:%i')
+            # print('TIMETEST:', time1)
+            # timeruum = time.time()
+            # print('timetestformat: ',timeruum)
+            if event == 1: 
+                event = 'Marathon'
+            else:
+                event = 'Half'
+            
+            self.wfile.write(bytes(f"<tr><td>{email}</td><td>{first}</td><td>{last}</td><td>{birth}</td><td>{event}</td><td>{time}</td></tr>", "utf-8")) 
+        self.wfile.write(bytes('''
+                    </tbody>  
+                </table>  
+            </body>  
+        </html>
+        ''', "utf-8"))
+    
+    
 
     # extracts query parameters from the request path (if any available)
     def do_query_parameters(self):
         raw_params = parse.urlparse(unquote(self.path)).query.split('&')
         query_params = {}
-        print(f'rp ={raw_params}')
+        #testing
+        query_params['event'] = raw_params[4].split('=')[1]
+        ruum = query_params['event']
+        if ruum == 1:
+            ruum = 'Marathon'
+        else:
+            ruum = 'Half'
+        print(ruum)
+        
+        print(raw_params)
+        
         if len(raw_params) > 1:
+            
             query_params['email'] = raw_params[0].split('=')[1]
             query_params['first'] = raw_params[1].split('=')[1]
             query_params['last']  = raw_params[2].split('=')[1]
             query_params['birth'] = raw_params[3].split('=')[1]
             query_params['event'] = raw_params[4].split('=')[1]
             query_params['time']  = raw_params[5].split('=')[1]
-        # print(f'qp={query_params}')
-        #test yea lol #my terminal is frozen
-        #year-month-date  yea i wrote it u can just delete it
-     # yea lol it follow me #you see the output #let me put it in git
-        return query_params
+        # #email testing
+        # raw_params = parse.urlparse(unquote(self.path)).query.split('&')
+        # query_params = {}
+        # query_params['email'] = raw_params[0].split('=')[1]
+        # ruumemail = query_params['email']
+        # print(ruumemail)
+        # #test key
+        # sql = "SELECT * FROM registrations ORDER BY 'email' DESC"
+        # cursor = self.db.cursor(buffered = True)
+        # cursor.execute(sql)
+        # for email in cursor:
+        #     if ruumemail == email: 
+        #         self.wfile.write(bytes('''
+        #         <p> Error! Please enter another email!!! </p>
+        #         ''', "utf-8"))
+        #     else:            
+        sql = f"INSERT INTO registrations VALUES ('{query_params['email']}', '{query_params['first']}', '{query_params['last']}', {query_params['birth']}, {query_params['event']}, {query_params['time']})"
+        cursor = self.db.cursor()
+        cursor.execute(sql)
+        db.commit()
+        return query_params     
 
     # handles all requests
     def do_GET(self):
@@ -133,39 +241,41 @@ class MyHandler(BaseHTTPRequestHandler):
         # validates the given path
         path = parse.urlparse(self.path).path
         if path != '/' and path != '/submit' and path != '/admin':
+            
             return 
-        # raw_params = parse.urlparse(unquote(self.path)).query.split('&')
-        # query_params = self.do_query_parameters()
-        # cursor = db.cursor()
-        # sql = f'INSERT INTO registrations (' + \
-        # 'email, first, last, birth, event, time)'+ 'VALUES(' + \
-        # query_params['email'] + ','+ \
-        # query_params['first'] + ','+\
-        # query_params['last'] + ','+\
-        # '2021-07-13,'+ \
-        # query_params['event'] + ','+ \
-        # query_params['time'] + ')'
-        # cursor.execute(sql)
-        # db.commit()
-        # i commented it out
-        # query_params = {}
-        # email =  raw_params[0].split('=')[1]
-        # first =  raw_params[1].split('=')[1]
-        # last =  raw_params[2].split('=')[1]
-        # birth =  raw_params[3].split('=')[1]
-        # event =  raw_params[4].split('=')[1]
-        # time =  raw_params[5].split('=')[1]
+        #if path == '/submit':
+            ##################################################################################################################
+        #test
+            # raw_params = parse.urlparse(unquote(self.path)).query.split('&')
+            # query_params = {}
+            # query_params['email'] = raw_params[0].split('=')[1]
+            # ruumemail = query_params['email']
+            # print('testruumemail:',ruumemail)
+            # #test key
+            # sql = "SELECT email FROM registrations"
+            # cursor = self.db.cursor(buffered = True)
+            
+            # cursor.execute(sql)
+            
+            # for email in cursor:
+            #     #testmail = email
+            #     #emailsplit = email
+            #     for item in email:
+            #         # for item in a_tuple:
+            #             print(item)
+            #     #print(emailsplit.split("(''),"))
+            #     if ruumemail == item:
+            #         print('error') 
+            #         self.wfile.write(bytes('''
+            #         <p> Error! Please enter another email!!! </p>
+            #         ''', "utf-8"))
+            
 
-        #get quote and update db
-        # sql = f"INSERT INTO registrations VALUES ({email}, {first}, {last}, {birth}, {event}, {time})"
-        # cursor = db.cursor()
-        # cursor.execute(sql)
-        # db.commit()
-       #generates the response headers
+        
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        #ok
+        
 
         # gets the hostname and today's date/time
         self.hostname = socket.gethostname()
@@ -173,8 +283,60 @@ class MyHandler(BaseHTTPRequestHandler):
         
         # decides which specific method to call based on self.path
         if path == '/submit':
-            query_params = self.do_query_parameters()
-            self.submit(query_params)
+            l = []
+ ##############################################################################################################################################################
+            raw_params = parse.urlparse(unquote(self.path)).query.split('&')
+            query_params = {}
+            query_params['email'] = raw_params[0].split('=')[1]
+            ruumemail = query_params['email']
+            print('testruumemail:',ruumemail)
+            #test key
+            sql = "SELECT email FROM registrations"
+            cursor = self.db.cursor(buffered = True)
+            
+            cursor.execute(sql)
+            
+            for email in cursor:
+                print("eail in cursor", email)
+                #testmail = email
+                #emailsplit = email
+                for item in email:
+                    l.append(item)
+                    # for item in a_tuple:
+
+                    print('Email in item in email',item)
+                    print('phiatrongL: ', l)
+            print('phuanogaiL: ', l)
+
+                #print(emailsplit.split("(''),"))
+            if ruumemail in l:
+                print('error') 
+                self.wfile.write(bytes('''
+                <p> Error! Please enter another email!!! </p>
+                            ''', "utf-8"))
+            else:
+                query_params = self.do_query_parameters()
+                self.submit(query_params)
+##############################################################################################################################################################
+            #test
+            # raw_params = parse.urlparse(unquote(self.path)).query.split('&')
+            # query_params = {}
+            # query_params['email'] = raw_params[0].split('=')[1]
+            # ruumemail = query_params['email']
+            # print('testruumemail:',ruumemail)
+            # #test key
+            # sql = "SELECT * FROM registrations ORDER BY 'email' DESC"
+            # cursor = self.db.cursor(buffered = True)
+            # cursor.execute(sql)
+            # for email in cursor:
+            #     if ruumemail == {email}: 
+            #         self.wfile.write(bytes('''
+            #         <p> Error! Please enter another email!!! </p>
+            #         ''', "utf-8"))
+            #     else:          
+
+            # query_params = self.do_query_parameters()
+            # self.submit(query_params)
         elif path == '/admin':
             self.admin()
         else:
@@ -199,7 +361,7 @@ if __name__ == "__main__":
     
     # attempt to start a web server
     my_handler = MyHandler
-    #my_handler.db = db
+    my_handler.db = db
     webServer = HTTPServer(('0.0.0.0', 8000), my_handler)
     print("Ready to serve!")
 

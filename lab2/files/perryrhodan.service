@@ -1,0 +1,14 @@
+[Unit]
+Description=perryrhodan service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=ec2-user
+ExecStart=/usr/bin/env python3 /home/ec2-user/perryrhodan/perryrhodan.py 
+
+[Install]
+WantedBy=multi-user.target
