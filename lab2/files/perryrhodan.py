@@ -64,16 +64,7 @@ class MyHandler(BaseHTTPRequestHandler):
             </body>
             ''', "utf-8"))
         
-        # #test key
-        # sql = "SELECT * FROM registrations ORDER BY 'email' DESC"
-        # cursor = self.db.cursor(buffered = True)
-        # cursor.execute(sql)
-        # for email in cursor:
-        #     if email == email: 
-        #         self.wfile.write(bytes('''
-        #         <p> Error! Please enter another email!!! </p>
-        #         ''', "utf-8"))
-            
+        
             
        
         
@@ -171,10 +162,7 @@ class MyHandler(BaseHTTPRequestHandler):
         cursor = self.db.cursor(buffered = True)
         cursor.execute(sql)
         for email, first, last, birth, event, time in cursor:
-            # time1 = time.format('time', '%h:%i')
-            # print('TIMETEST:', time1)
-            # timeruum = time.time()
-            # print('timetestformat: ',timeruum)
+            
             if event == 1: 
                 event = 'Marathon'
             else:
@@ -213,22 +201,7 @@ class MyHandler(BaseHTTPRequestHandler):
             query_params['birth'] = raw_params[3].split('=')[1]
             query_params['event'] = raw_params[4].split('=')[1]
             query_params['time']  = raw_params[5].split('=')[1]
-        # #email testing
-        # raw_params = parse.urlparse(unquote(self.path)).query.split('&')
-        # query_params = {}
-        # query_params['email'] = raw_params[0].split('=')[1]
-        # ruumemail = query_params['email']
-        # print(ruumemail)
-        # #test key
-        # sql = "SELECT * FROM registrations ORDER BY 'email' DESC"
-        # cursor = self.db.cursor(buffered = True)
-        # cursor.execute(sql)
-        # for email in cursor:
-        #     if ruumemail == email: 
-        #         self.wfile.write(bytes('''
-        #         <p> Error! Please enter another email!!! </p>
-        #         ''', "utf-8"))
-        #     else:            
+                   
         sql = f"INSERT INTO registrations VALUES ('{query_params['email']}', '{query_params['first']}', '{query_params['last']}', {query_params['birth']}, {query_params['event']}, {query_params['time']})"
         cursor = self.db.cursor()
         cursor.execute(sql)
@@ -243,32 +216,7 @@ class MyHandler(BaseHTTPRequestHandler):
         if path != '/' and path != '/submit' and path != '/admin':
             
             return 
-        #if path == '/submit':
-            ##################################################################################################################
-        #test
-            # raw_params = parse.urlparse(unquote(self.path)).query.split('&')
-            # query_params = {}
-            # query_params['email'] = raw_params[0].split('=')[1]
-            # ruumemail = query_params['email']
-            # print('testruumemail:',ruumemail)
-            # #test key
-            # sql = "SELECT email FROM registrations"
-            # cursor = self.db.cursor(buffered = True)
-            
-            # cursor.execute(sql)
-            
-            # for email in cursor:
-            #     #testmail = email
-            #     #emailsplit = email
-            #     for item in email:
-            #         # for item in a_tuple:
-            #             print(item)
-            #     #print(emailsplit.split("(''),"))
-            #     if ruumemail == item:
-            #         print('error') 
-            #         self.wfile.write(bytes('''
-            #         <p> Error! Please enter another email!!! </p>
-            #         ''', "utf-8"))
+        
             
 
         
@@ -298,17 +246,14 @@ class MyHandler(BaseHTTPRequestHandler):
             
             for email in cursor:
                 print("eail in cursor", email)
-                #testmail = email
-                #emailsplit = email
+                
                 for item in email:
                     l.append(item)
-                    # for item in a_tuple:
-
                     print('Email in item in email',item)
                     print('phiatrongL: ', l)
             print('phuanogaiL: ', l)
 
-                #print(emailsplit.split("(''),"))
+                
             if ruumemail in l:
                 print('error') 
                 self.wfile.write(bytes('''
@@ -317,26 +262,7 @@ class MyHandler(BaseHTTPRequestHandler):
             else:
                 query_params = self.do_query_parameters()
                 self.submit(query_params)
-##############################################################################################################################################################
-            #test
-            # raw_params = parse.urlparse(unquote(self.path)).query.split('&')
-            # query_params = {}
-            # query_params['email'] = raw_params[0].split('=')[1]
-            # ruumemail = query_params['email']
-            # print('testruumemail:',ruumemail)
-            # #test key
-            # sql = "SELECT * FROM registrations ORDER BY 'email' DESC"
-            # cursor = self.db.cursor(buffered = True)
-            # cursor.execute(sql)
-            # for email in cursor:
-            #     if ruumemail == {email}: 
-            #         self.wfile.write(bytes('''
-            #         <p> Error! Please enter another email!!! </p>
-            #         ''', "utf-8"))
-            #     else:          
 
-            # query_params = self.do_query_parameters()
-            # self.submit(query_params)
         elif path == '/admin':
             self.admin()
         else:
