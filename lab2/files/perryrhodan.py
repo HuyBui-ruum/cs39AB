@@ -225,9 +225,7 @@ class MyHandler(BaseHTTPRequestHandler):
         self.end_headers()
         
 
-        # gets the hostname and today's date/time
-        self.hostname = socket.gethostname()
-        self.today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+        
         
         # decides which specific method to call based on self.path
         if path == '/submit':
@@ -267,15 +265,18 @@ class MyHandler(BaseHTTPRequestHandler):
             self.admin()
         else:
             self.main()
+        self.hostname = socket.gethostname()
+        self.today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+        self.wfile.write(bytes(f"Hello, and welcome to {self.hostname}<P>{self.today}", "utf-8"))
 
 if __name__ == "__main__":
 
     # delete the following lines once you are satisfied with the db connection 
     # make sure to create those variables in your EC2 instances using the user-data.sh script
-    os.environ['DB_HOST']     = 'perryrhodan.c7fsm4obtdzb.us-west-1.rds.amazonaws.com'
-    os.environ['DB_NAME']     = 'perryrhodan'
-    os.environ['DB_USER']     = 'perryrhodan'
-    os.environ['DB_PASSWORD'] = '135791'    
+    # os.environ['DB_HOST']     = 'perryrhodan.c7fsm4obtdzb.us-west-1.rds.amazonaws.com'
+    # os.environ['DB_NAME']     = 'perryrhodan'
+    # os.environ['DB_USER']     = 'perryrhodan'
+    # os.environ['DB_PASSWORD'] = '135791'    
 
     # attempt to connect to MySQL
     db = mysql.connector.connect(

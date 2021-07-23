@@ -4,6 +4,10 @@ After=network.target
 StartLimitIntervalSec=0
 
 [Service]
+Environment=DB_HOST=perryrhodan.c7fsm4obtdzb.us-west-1.rds.amazonaws.com
+Environment=DB_NAME=perryrhodan
+Environment=DB_USER=perryrhodan
+Environment=DB_PASSWORD=135791
 Type=simple
 Restart=always
 RestartSec=1
