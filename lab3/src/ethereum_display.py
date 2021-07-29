@@ -2,103 +2,77 @@
 # Instructor: Thyago Mota
 # Description: Activity 11 - Extract the dollar to real exchange rate, saving it into a database. All quotes are then displayed using a dynamically generated web page. 
 
-import requests
 import mysql.connector
 import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 EXCHANGE_RATE_URL = 'https://themoneyconverter.com/USD/BRL'
+SQL = "SELECT `date`, `time`, price FROM quotes ORDER BY `date` DESC"
 
-class MyHandler(BaseHTTPRequestHandler):
+html_start = '''
+<html>
+    <head>
+        <title>Ethereum Prices</title>
+        <style>
+            body {
+                font:18px/1.4 Verdana,Arial; 
+                background: #fff; 
+                height:100%; 
+                margin:25px 0; 
+                padding:0;
+                text-align: center
+            }
 
-    def do_GET(self):
+            p {
+                margin-top:0
+            }
 
-        # only accept self.path = "/"
-        if self.path != '/':
-            return 
+            table { 
+                border: 1px solid black; 
+                margin: 0 auto; 
+                border-collapse: separate;
+                box-sizing: border-box;
+                table-layout: fixed;
+                width: 900px;
+            }
 
+            th, td { 
+                border: 1px solid black;
+                text-align: center; 
+            }
 
-        # generate a response
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
+            thead { 
+                background: #008CBA; 
+                color: #fff; 
+            }
 
-        self.wfile.write(bytes('''
-            <html>
-            <head>
-                <title>Ethereum Prices</title>
-                <style>
-                    body {
-                        font:18px/1.4 Verdana,Arial; 
-                        background: #fff; 
-                        height:100%; 
-                        margin:25px 0; 
-                        padding:0;
-                        text-align: center
-                    }
+            tbody { 
+                background: #fff; 
+                color: #000; 
+            }
+        </style>
+    </head> 
+        <body>
+            <table class="table table-striped table-bordered table-sm">  
+                <thead class="thead-dark">  
+                    <tr>  
+                        <th>Date</th>  
+                        <th>Time</th>  
+                        <th>Exchange Rate</th>  
+                    </tr>  
+                </thead>  
+                <tbody class="tbody-light">'''
+html_end = '''
+                </tbody>  
+            </table>  
+        </body>  
+    </html>'''  
+os.environ['DB_HOST']     = 'lab3.cc6kw1lnwyaw.us-west-1.rds.amazonaws.com'
+os.environ['DB_NAME']     = 'ethereum'
+os.environ['DB_USER']     = 'ethereum'
+os.environ['DB_PASSWORD'] = '12345678'
 
-                    p {
-                        margin-top:0
-                    }
-
-                    table { 
-                        border: 1px solid black; 
-                        margin: 0 auto; 
-                        border-collapse: separate;
-                        box-sizing: border-box;
-                        table-layout: fixed;
-                        width: 900px;
-                    }
-
-                    th, td { 
-                        border: 1px solid black;
-                        text-align: center; 
-                    }
-
-                    thead { 
-                        background: #008CBA; 
-                        color: #fff; 
-                    }
-
-                    tbody { 
-                        background: #fff; 
-                        color: #000; 
-                    }
-                </style>
-            </head> 
-        ''', "utf-8"))
-        self.wfile.write(bytes('''
-            <body>
-                <table class="table table-striped table-bordered table-sm">  
-                    <thead class="thead-dark">  
-                        <tr>  
-                            <th>Date</th>  
-                            <th>Time</th>  
-                            <th>Price</th>  
-                        </tr>  
-                    </thead>  
-                    <tbody class="tbody-light">  
-        ''', "utf-8"))
-        sql = "SELECT `date`, `time`, price FROM quotes ORDER BY `date` DESC"
-        cursor = self.db.cursor(buffered = True)
-        cursor.execute(sql)
-        for date, time, price in cursor:
-            self.wfile.write(bytes(f"<tr><td>{date}</td><td>{time}</td><td>{price}</td></tr>", "utf-8")) 
-        self.wfile.write(bytes('''
-                    </tbody>  
-                </table>  
-            </body>  
-        </html>
-        ''', "utf-8"))
-
-if __name__ == "__main__":
-
-    # delete the following lines once you are satisfied with the db connection and before creating the docker image
-    os.environ['DB_HOST']     = 'lab3.cc6kw1lnwyaw.us-west-1.rds.amazonaws.com'
-    os.environ['DB_NAME']     = 'ethereum'
-    os.environ['DB_USER']     = 'ethereum'
-    os.environ['DB_PASSWORD'] = '12345678'
-
+def lambda_handler(event, context):
     # attempt to connect to MySQL
     db = mysql.connector.connect(
         host     = os.getenv('DB_HOST'),
@@ -106,18 +80,22 @@ if __name__ == "__main__":
         user     = os.getenv('DB_USER'),
         password = os.getenv('DB_PASSWORD')
     )
-
-    # attempt to start a web server
-    my_handler = MyHandler 
-    my_handler.db = db
-    webServer = HTTPServer(('0.0.0.0', 8000), my_handler)
-    print("Ready to serve!")
-
-    try:
-        webServer.serve_forever()
-    except KeyboardInterrupt:
-        pass
-
-    webServer.server_close()
-    print("Server stopped.")
+    cursor = db.cursor()
+    cursor.execute(SQL)
+    table_data = ''
+    for date, time, price in cursor:
+        table_data += ''.join([f"\n{' '*24}<tr>\n{' '*28}<td>{date}</td>\n{' '*28}<td>{time}</td>\n{' '*28}<td>{price}</td>\n{' '*24}</tr>" ])
     db.close()
+
+    return {
+        "statusCode": 200,
+        "statusDescription": "200 OK",
+        "isBase64Encoded": False,
+        "headers": {
+            "Content-Type": "text/html"
+        },
+        "body": html_start + table_data + html_end
+    }
+
+
+lambda_handler('', '')
