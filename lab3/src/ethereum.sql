@@ -2,9 +2,8 @@ CREATE DATABASE ethereum;
 
 USE ethereum;
 
-CREATE TABLE quotes (
-  `date` DATE      PRIMARY KEY,
-  `time` TIME NOT NULL,
+CREATE TABLE prices (
+  `datetime` DATETIME      PRIMARY KEY,
   price      DECIMAL(8, 4) NOT NULL
 );
 

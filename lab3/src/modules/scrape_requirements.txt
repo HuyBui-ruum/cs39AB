@@ -1,0 +1,14 @@
+# copy scrape.zip from the module folder to src/build/lib/python3.8/site-packages/, then use the following command:
+
+zip -r scrape.zip \
+    scrape.py \
+    bs4 \
+    certifi \
+    chardet \
+    idna \
+    requests \
+    soupsieve \
+    urllib3 \
+    mysql \
+    mysqlx
+
