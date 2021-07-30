@@ -1,4 +1,4 @@
-# copy scrape.zip from the module folder to src/build/lib/python3.8/site-packages/, then use the following command:
+# copy ethereum_scrape.zip from the module folder to src/build/lib/python3.8/site-packages/, then use the following command:
 
 zip -r ethereum_display.zip \
     ethereum_display.py \
